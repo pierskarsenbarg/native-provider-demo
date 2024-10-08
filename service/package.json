@@ -3,5 +3,8 @@
   "private": true,
   "workspaces": [
     "src/*"
-  ]
+  ],
+  "scripts": {
+    "dev": "bun run src/api/index.ts"
+  }
 }
