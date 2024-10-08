@@ -2,7 +2,7 @@
   "name": "provider",
   "private": true,
   "workspaces": [
-    "src/*"
+    "packages/*"
   ],
   "scripts": {
     "dev": "bun run src/api/index.ts"
