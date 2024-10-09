@@ -28,10 +28,13 @@ COPY . .
 # # copy production dependencies and source code into final image
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /app/packages/ ./
+COPY --from=prerelease /app/packages ./packages/
 COPY --from=prerelease /app/package.json .
+
+RUN bun run db:migrate
+RUN chmod +rw /app && chmod +rw /app/db.sqlite
 
 # run the app
 USER bun
 EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "api/index.ts" ]
+ENTRYPOINT [ "bun", "run", "packages/api/index.ts" ]

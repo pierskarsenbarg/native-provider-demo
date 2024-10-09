@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@hono/swagger-ui": "^0.4.1",
     "@hono/zod-openapi": "^0.16.4",
     "core": "workspace:*",
     "hono": "^4.6.3"

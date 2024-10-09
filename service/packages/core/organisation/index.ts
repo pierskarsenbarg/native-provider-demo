@@ -13,9 +13,19 @@ export module Organisation {
     export type Info = z.infer<typeof Info>;
 
     export const create = async (name: string) => {
-        await db.insert(organisationTable)
-                .values({name: name});
-    }
+        var rows = await db.insert(organisationTable)
+                .values({name: name}).returning();
+        const result = pipe(
+                rows,
+                map((org): Info => ({
+                    id: org.id,
+                    name: org.name
+                })),
+                first()
+            );
+    
+            return result as Info;
+}
 
     export const list = async () => {
         const rows = await db.select()
