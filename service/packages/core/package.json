@@ -10,8 +10,8 @@
     "drizzle-kit": "^0.25.0"
   },
   "dependencies": {
-    "@hono/zod-openapi": "^0.16.4",
     "drizzle-orm": "^0.34.1",
+    "remeda": "^2.15.0",
     "zod": "^3.23.8"
   }
 }
