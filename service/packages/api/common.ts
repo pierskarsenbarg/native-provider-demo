@@ -5,3 +5,16 @@ export function Result<T extends z.ZodTypeAny>(schema: T) {
     result: schema,
   });
 }
+
+export const IdSchema = z.object({
+    id: z.string().openapi({
+      param: {
+        name: "id",
+        in: "path",
+      },
+    }),
+  });
+
+export const ErrorSchema = z.object({
+    error: z.string(),
+  });

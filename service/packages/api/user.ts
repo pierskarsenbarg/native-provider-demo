@@ -1,13 +1,13 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
-import { Organisation } from "core/organisation";
-import { Result, IdSchema, ErrorSchema } from "./common";
+import { User } from "core/user";
+import { Result } from "./common";
 
-export module OrganisationApi {
-  export const OrganisationSchema = z
-    .object(Organisation.Info.shape)
-    .openapi("Organisation");
+export module UserApi {
+  export const UserSchema = z
+    .object(User.Info.shape)
+    .openapi("User");
 
-  export const OrganisationId = z.object({
+  export const UserId = z.object({
     id: z.string().openapi({
       param: {
         name: "id",
@@ -26,17 +26,17 @@ export module OrganisationApi {
           200: {
             content: {
               "application/json": {
-                schema: Result(OrganisationSchema.array()),
+                schema: Result(UserSchema.array()),
               },
             },
-            description: "Returns a list of organisations",
+            description: "Returns a list of users",
           },
         },
       }),
       async (c) => {
         return c.json(
           {
-            result: await Organisation.list(),
+            result: await User.list(),
           },
           200
         );
@@ -47,13 +47,15 @@ export module OrganisationApi {
         method: "get",
         path: "/{id}",
         request: {
-          params: IdSchema,
+          params: UserId,
         },
         responses: {
           404: {
             content: {
               "application/json": {
-                schema: ErrorSchema,
+                schema: z.object({
+                  error: z.string(),
+                }),
               },
             },
             description: "Not found",
@@ -61,7 +63,9 @@ export module OrganisationApi {
           400: {
             content: {
               "application/json": {
-                schema: ErrorSchema,
+                schema: z.object({
+                  error: z.string(),
+                }),
               },
             },
             description: "Bad request",
@@ -69,7 +73,7 @@ export module OrganisationApi {
           200: {
             content: {
               "application/json": {
-                schema: Result(OrganisationSchema),
+                schema: Result(UserSchema),
               },
             },
             description: "Returns order",
@@ -77,31 +81,31 @@ export module OrganisationApi {
         },
       }),
       async (c) => {
-        const orgIdParam = c.req.param("id");
+        const userIdParam = c.req.param("id");
 
         const schemaToTest = z.object({
           value: z.coerce.number(),
         });
 
         const validation = await schemaToTest.safeParseAsync({
-          value: orgIdParam,
+          value: userIdParam,
         });
 
         if (!validation.success) {
           return c.json(
             {
-              error: "Invalid organisation id",
+              error: "Invalid user id",
             },
             400
           );
         }
 
-        const orgId = z.coerce.number().parse(orgIdParam);
-        const org = await Organisation.getById(orgId);
-        if (org === undefined) { return c.json({error: "Organisation not found"}, 404); }
+        const userId = z.coerce.number().parse(userIdParam);
+        const user = await User.getById(userId);
+        if (user === undefined) { return c.json({error: "User not found"}, 404); }
         return c.json(
           {
-            result: org,
+            result: user,
           },
           200
         );
@@ -120,7 +124,7 @@ export module OrganisationApi {
           body: {
             content: {
               "application/json": {
-                schema: z.object({ name: z.string() }),
+                schema: z.object({ name: z.string(), teamId: z.number() }),
               },
             },
           },
@@ -130,17 +134,17 @@ export module OrganisationApi {
             description: "",
             content: {
               "application/json": {
-                schema: Result(OrganisationSchema),
+                schema: Result(UserSchema),
               },
             },
           },
         },
       }),
       async (c) => {
-        const name = c.req.valid("json");
+        const user = c.req.valid("json");
         return c.json(
           {
-            result: await Organisation.create(name.name),
+            result: await User.create(user.name, user.teamId),
           },
           201
         );
