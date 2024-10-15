@@ -1,13 +1,13 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
-import { Team } from "core/team";
-import { Result } from "./common";
+import { User } from "@service/core/user";
+import { ErrorSchema, Result } from "./common";
 
-export module TeamApi {
-  export const TeamSchema = z
-    .object(Team.Info.shape)
-    .openapi("Team");
+export module UserApi {
+  export const UserSchema = z
+    .object(User.Info.shape)
+    .openapi("User");
 
-  export const TeamId = z.object({
+  export const UserId = z.object({
     id: z.string().openapi({
       param: {
         name: "id",
@@ -26,17 +26,17 @@ export module TeamApi {
           200: {
             content: {
               "application/json": {
-                schema: Result(TeamSchema.array()),
+                schema: Result(UserSchema.array()),
               },
             },
-            description: "Returns a list of teams",
+            description: "Returns a list of users",
           },
         },
       }),
       async (c) => {
         return c.json(
           {
-            result: await Team.list(),
+            result: await User.list(),
           },
           200
         );
@@ -44,18 +44,17 @@ export module TeamApi {
     )
     .openapi(
       createRoute({
+        security: [{ Bearer: [] }],
         method: "get",
         path: "/{id}",
         request: {
-          params: TeamId,
+          params: UserId,
         },
         responses: {
           404: {
             content: {
               "application/json": {
-                schema: z.object({
-                  error: z.string(),
-                }),
+                schema: ErrorSchema
               },
             },
             description: "Not found",
@@ -63,9 +62,7 @@ export module TeamApi {
           400: {
             content: {
               "application/json": {
-                schema: z.object({
-                  error: z.string(),
-                }),
+                schema: ErrorSchema
               },
             },
             description: "Bad request",
@@ -73,39 +70,39 @@ export module TeamApi {
           200: {
             content: {
               "application/json": {
-                schema: Result(TeamSchema),
+                schema: Result(UserSchema),
               },
             },
-            description: "Returns team",
+            description: "Returns order",
           },
         },
       }),
       async (c) => {
-        const teamIdParam = c.req.param("id");
+        const userIdParam = c.req.param("id");
 
         const schemaToTest = z.object({
           value: z.coerce.number(),
         });
 
         const validation = await schemaToTest.safeParseAsync({
-          value: teamIdParam,
+          value: userIdParam,
         });
 
         if (!validation.success) {
           return c.json(
             {
-              error: "Invalid team id",
+              error: "Invalid user id",
             },
             400
           );
         }
 
-        const teamId = z.coerce.number().parse(teamIdParam);
-        const team = await Team.getById(teamId);
-        if (team === undefined) { return c.json({error: "Team not found"}, 404); }
+        const userId = z.coerce.number().parse(userIdParam);
+        const user = await User.getById(userId);
+        if (user === undefined) { return c.json({error: "User not found"}, 404); }
         return c.json(
           {
-            result: team,
+            result: user,
           },
           200
         );
@@ -124,7 +121,7 @@ export module TeamApi {
           body: {
             content: {
               "application/json": {
-                schema: z.object({ name: z.string(), orgId: z.number() }),
+                schema: z.object({ name: z.string(), teamId: z.number() }),
               },
             },
           },
@@ -134,20 +131,35 @@ export module TeamApi {
             description: "",
             content: {
               "application/json": {
-                schema: Result(TeamSchema),
+                schema: Result(UserSchema),
               },
             },
           },
+          400: {
+            description: "Bad request",
+            content: {
+              "application/json": {
+                schema: ErrorSchema
+              }
+            }
+          }
         },
       }),
       async (c) => {
-        const team = c.req.valid("json");
-        return c.json(
-          {
-            result: await Team.create(team.name, team.orgId),
-          },
-          201
-        );
+        const user = c.req.valid("json");
+        try {
+          return c.json(
+            {
+              result: await User.create(user.name, user.teamId),
+            },
+            201
+          );
+        } catch(err) {
+          return c.json({
+            error: "Bad request"
+          }, 400)
+        }
+        
       }
     );
 }

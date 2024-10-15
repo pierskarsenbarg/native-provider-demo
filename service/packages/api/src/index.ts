@@ -3,6 +3,8 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { bearerAuth } from 'hono/bearer-auth'
 import { swaggerUI } from '@hono/swagger-ui'
 import { OrganisationApi } from "./organisation";
+import { TeamApi } from "./team";
+import { UserApi } from "./user";
 
 const authToken = "hunter2";
 
@@ -21,14 +23,16 @@ app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
 })
 
 app
-  .route("/organisation", OrganisationApi.route);
+  .route("/organisation", OrganisationApi.route)
+  .route("/team", TeamApi.route)
+  .route("/user", UserApi.route);
 
 
 app.doc("/doc", {
   openapi: '3.0.0',
   info: {
     version: '1.0.0',
-    title: 'My API',
+    title: 'Native Provider API',
   },
 })
 

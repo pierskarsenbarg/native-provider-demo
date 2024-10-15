@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "bun --watch run packages/api/index.ts",
+    "dev": "bun --watch run packages/api/src/index.ts",
     "db:generate": "drizzle-kit generate --config=./packages/core/drizzle.config.ts",
     "db:migrate": "bun run packages/core/db/migrate.ts"
   }

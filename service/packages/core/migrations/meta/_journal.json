@@ -15,6 +15,13 @@
       "when": 1728416799479,
       "tag": "0001_previous_gressill",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1728989534457,
+      "tag": "0002_wide_nico_minoru",
+      "breakpoints": true
     }
   ]
 }
