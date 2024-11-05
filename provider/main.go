@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pierskarsenbarg/provider-base/pkg"
+	"github.com/pierskarsenbarg/native-provider-demo/provider/pkg"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi-go-provider/middleware/schema"
@@ -30,14 +30,14 @@ func main() {
 func provider() p.Provider {
 	return infer.Provider(infer.Options{
 		Metadata: schema.Metadata{
-			DisplayName: "base",
+			DisplayName: Name,
 			Description: "Demo native provider",
 			LanguageMap: map[string]any{
 				"go": gogen.GoPackageInfo{
-					ImportBasePath: "github.com/pierskarsenbarg/native-provider-demo/sdk/go/base",
+					ImportBasePath: "github.com/pierskarsenbarg/native-provider-demo/sdk/go/nativeProvider",
 				},
 				"nodejs": nodejsgen.NodePackageInfo{
-					PackageName: "@pierskarsenbarg/base",
+					PackageName: "@pierskarsenbarg/nativeProvider",
 					Dependencies: map[string]string{
 						"@pulumi/pulumi": "^3.0.0",
 					},
@@ -56,20 +56,20 @@ func provider() p.Provider {
 					Requires: map[string]string{
 						"pulumi": ">=3.0.0,<4.0.0",
 					},
-					PackageName: "pierskarsenbarg_pulumi_base",
+					PackageName: "pierskarsenbarg_pulumi_nativeProvider",
 				},
 			},
-			PluginDownloadURL: "github://api.github.com/pierskarsenbarg/pulumi-base",
+			PluginDownloadURL: "github://api.github.com/pierskarsenbarg/native-provider-demo",
 			Publisher:         "Piers Karsenbarg",
 		},
 		Resources: []infer.InferredResource{
-			infer.Resource[*pkg.Account, pkg.AccountArgs, pkg.AccountState](),
+			// infer.Resource[*pkg.Account, pkg.AccountArgs, pkg.AccountState](),
 		},
 		ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
 			"pkg": "index", // required because the folder with everything in is "pkg"
 		},
 		Functions: []infer.InferredFunction{
-			infer.Function[*pkg.GetAccount, pkg.GetAccountArgs, pkg.AccountState](),
+			// infer.Function[*pkg.GetAccount, pkg.GetAccountArgs, pkg.AccountState](),
 		},
 		Config: infer.Config[*pkg.Config](),
 	})
