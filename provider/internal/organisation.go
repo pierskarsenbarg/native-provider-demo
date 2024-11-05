@@ -64,6 +64,29 @@ func (c *Client) GetOrganisation(ctx context.Context, id int) (*GetOrganisationR
 	return &res, nil
 }
 
-// TODO Add update name function
+func (c *Client) UpdateOrganisation(ctx context.Context, id int, name string) error {
+	requestPath := "/organisation"
 
-// TODO Add delete org function
+	req := Organisation{
+		Id:   id,
+		Name: name,
+	}
+
+	_, err := c.do(ctx, http.MethodPatch, requestPath, req, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) DeleteOrganisation(ctx context.Context, id int) error {
+	requestPath := fmt.Sprintf("/organisation/%s", string(id))
+
+	_, err := c.do(ctx, http.MethodDelete, requestPath, nil, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
