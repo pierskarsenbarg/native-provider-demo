@@ -2,14 +2,16 @@ package pkg
 
 import (
 	"context"
-	"net/url"
+	"net/http"
+	"time"
 
+	apiClient "github.com/pierskarsenbarg/native-provider-demo/provider/internal"
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
 type Config struct {
 	ApiToken string `pulumi:"apiToken,optional" provider:"secret"`
-	Client   serviceClient.Client
+	Client   apiClient.Client
 	BaseUrl  string
 }
 
@@ -19,21 +21,19 @@ func (c *Config) Annotate(a infer.Annotator) {
 	a.Describe(&c.BaseUrl, "Url of the API")
 }
 
-// var _ = (infer.Annotated)((*Config)(nil))
-
 var _ = (infer.CustomConfigure)((*Config)(nil))
 
 func (c *Config) Configure(ctx context.Context) error {
-	// httpClient := http.Client{
-	// 	Timeout: 60 * time.Second,
-	// }
+	httpClient := http.Client{
+		Timeout: 60 * time.Second,
+	}
 
-	baseUrl, err := url.Parse(c.BaseUrl)
+	client, err := apiClient.NewClient(&httpClient, c.ApiToken, "")
 	if err != nil {
 		return err
 	}
 
-	c.Client, err := serviceClient.NewClientWithResponses(baseUrl.String())
+	c.Client = *client
 
-	c.Client = client
+	return nil
 }
