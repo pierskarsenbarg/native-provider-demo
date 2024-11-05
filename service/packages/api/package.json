@@ -3,15 +3,15 @@
   "version": "0.0.0",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "^1.1.11"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.6.3"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.4.1",
     "@hono/zod-openapi": "^0.16.4",
     "@service/core": "workspace:*",
-    "hono": "^4.6.3"
+    "hono": "^4.6.5"
   }
 }

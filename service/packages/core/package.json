@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "^1.1.11"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0",
-    "drizzle-kit": "^0.25.0"
+    "typescript": "^5.6.3",
+    "drizzle-kit": "^0.26.2"
   },
   "dependencies": {
-    "drizzle-orm": "^0.34.1",
+    "drizzle-orm": "^0.35.1",
     "remeda": "^2.15.0",
     "zod": "^3.23.8"
   }
