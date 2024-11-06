@@ -34,7 +34,8 @@ func provider() p.Provider {
 			Description: "Demo native provider",
 			LanguageMap: map[string]any{
 				"go": gogen.GoPackageInfo{
-					ImportBasePath: "github.com/pierskarsenbarg/native-provider-demo/sdk/go/nativeProvider",
+					ModulePath:     "github.com/pierskarsenbarg/native-provider-demo/provider/sdk",
+					ImportBasePath: "github.com/pierskarsenbarg/native-provider-demo/provider/sdk/go/nativeProvider",
 				},
 				"nodejs": nodejsgen.NodePackageInfo{
 					PackageName: "@pierskarsenbarg/nativeProvider",
@@ -47,7 +48,7 @@ func provider() p.Provider {
 					},
 				},
 				"csharp": dotnetgen.CSharpPackageInfo{
-					RootNamespace: "PiersKarsenbarg",
+					RootNamespace: "MyNamespace",
 					PackageReferences: map[string]string{
 						"Pulumi": "3.*",
 					},
@@ -63,13 +64,13 @@ func provider() p.Provider {
 			Publisher:         "Piers Karsenbarg",
 		},
 		Resources: []infer.InferredResource{
-			// infer.Resource[*pkg.Account, pkg.AccountArgs, pkg.AccountState](),
+			infer.Resource[*pkg.Organisation, pkg.OrganisationArgs, pkg.OrganisationState](),
 		},
 		ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
 			"pkg": "index", // required because the folder with everything in is "pkg"
 		},
 		Functions: []infer.InferredFunction{
-			// infer.Function[*pkg.GetAccount, pkg.GetAccountArgs, pkg.AccountState](),
+			infer.Function[*pkg.GetOrganisation, pkg.GetOrganisationArgs, pkg.OrganisationState](),
 		},
 		Config: infer.Config[*pkg.Config](),
 	})

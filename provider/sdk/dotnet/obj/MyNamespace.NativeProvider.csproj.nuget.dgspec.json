@@ -1,0 +1,77 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/piers/go/src/github.com/pierskarsenbarg/native-provider-demo/provider/sdk/dotnet/MyNamespace.NativeProvider.csproj": {}
+  },
+  "projects": {
+    "/Users/piers/go/src/github.com/pierskarsenbarg/native-provider-demo/provider/sdk/dotnet/MyNamespace.NativeProvider.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/piers/go/src/github.com/pierskarsenbarg/native-provider-demo/provider/sdk/dotnet/MyNamespace.NativeProvider.csproj",
+        "projectName": "MyNamespace.NativeProvider",
+        "projectPath": "/Users/piers/go/src/github.com/pierskarsenbarg/native-provider-demo/provider/sdk/dotnet/MyNamespace.NativeProvider.csproj",
+        "packagesPath": "/Users/piers/.nuget/packages/",
+        "outputPath": "/Users/piers/go/src/github.com/pierskarsenbarg/native-provider-demo/provider/sdk/dotnet/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/piers/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.SourceLink.GitHub": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "Pulumi": {
+              "target": "Package",
+              "version": "[3.*, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.201/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

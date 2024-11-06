@@ -1,0 +1,5 @@
+{
+  "resource": true,
+  "name": "nativeProvider",
+  "server": "github://api.github.com/pierskarsenbarg/native-provider-demo"
+}

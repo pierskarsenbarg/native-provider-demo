@@ -79,6 +79,7 @@ export module OrganisationApi {
         });
 
         if (!validation.success) {
+          console.log(`Org id: ${id}`)
           return c.json(
             {
               error: "Invalid organisation id",
@@ -166,10 +167,6 @@ export module OrganisationApi {
         }
 
         const orgId = z.coerce.number().parse(orgIdParam);
-        const org = await Organisation.getById(orgId);
-        if (org === undefined) {
-          return c.json({ error: "Organisation not found" }, 404);
-        }
         await Organisation.remove(orgId);
         return c.body(null, 204);
       }
@@ -237,7 +234,7 @@ export module OrganisationApi {
             Bearer: [],
           },
         ],
-        method: "patch",
+        method: "put",
         path: "/",
         request: {
           body: {

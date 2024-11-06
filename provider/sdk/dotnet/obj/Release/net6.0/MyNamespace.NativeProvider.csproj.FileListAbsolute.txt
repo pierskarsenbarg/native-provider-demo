@@ -1,0 +1,13 @@
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/bin/Release/net6.0/MyNamespace.NativeProvider.deps.json
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/bin/Release/net6.0/MyNamespace.NativeProvider.dll
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/bin/Release/net6.0/MyNamespace.NativeProvider.pdb
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/obj/Release/net6.0/MyNamespace.NativeProvider.csproj.AssemblyReference.cache
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/obj/Release/net6.0/MyNamespace.NativeProvider.GeneratedMSBuildEditorConfig.editorconfig
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/obj/Release/net6.0/MyNamespace.NativeProvider.AssemblyInfoInputs.cache
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/obj/Release/net6.0/MyNamespace.NativeProvider.AssemblyInfo.cs
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/obj/Release/net6.0/MyNamespace.NativeProvider.csproj.CoreCompileInputs.cache
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/obj/Release/net6.0/MyNamespace.NativeProvider.sourcelink.json
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/obj/Release/net6.0/MyNamespace.NativeProvider.dll
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/obj/Release/net6.0/refint/MyNamespace.NativeProvider.dll
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/obj/Release/net6.0/MyNamespace.NativeProvider.pdb
+/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/obj/Release/net6.0/ref/MyNamespace.NativeProvider.dll

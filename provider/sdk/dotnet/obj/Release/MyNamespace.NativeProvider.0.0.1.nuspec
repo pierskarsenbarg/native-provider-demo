@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>MyNamespace.NativeProvider</id>
+    <version>0.0.1</version>
+    <authors>Piers Karsenbarg</authors>
+    <icon>logo.png</icon>
+    <description>Demo native provider</description>
+    <repository type="git" />
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="Pulumi" version="3.67.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/bin/Release/net6.0/MyNamespace.NativeProvider.pdb" target="lib/net6.0/MyNamespace.NativeProvider.pdb" />
+    <file src="/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/bin/Release/net6.0/MyNamespace.NativeProvider.dll" target="lib/net6.0/MyNamespace.NativeProvider.dll" />
+    <file src="/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/version.txt" target="content/version.txt" />
+    <file src="/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/pulumi-plugin.json" target="content/pulumi-plugin.json" />
+    <file src="/private/var/folders/x8/cdd9j87s607fwpy0q62mfmmw0000gn/T/tmp.lmjB6lpYqA/dotnet/logo.png" target="logo.png" />
+  </files>
+</package>

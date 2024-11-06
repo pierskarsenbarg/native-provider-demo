@@ -52,16 +52,16 @@ func (c *Client) ListOrganisations(ctx context.Context) (*ListOrganisationRespon
 	return &res, nil
 }
 
-func (c *Client) GetOrganisation(ctx context.Context, id int) (*GetOrganisationResponse, error) {
-	requestPath := fmt.Sprintf("/organisation/%s", string(id))
+func (c *Client) GetOrganisation(ctx context.Context, id string) (*GetOrganisationResponse, *http.Response, error) {
+	requestPath := fmt.Sprintf("/organisation/%s", id)
 
-	var res GetOrganisationResponse
-	_, err := c.do(ctx, http.MethodGet, requestPath, nil, &res)
+	var orgRes GetOrganisationResponse
+	res, err := c.do(ctx, http.MethodGet, requestPath, nil, &orgRes)
 	if err != nil {
-		return nil, err
+		return nil, res, err
 	}
 
-	return &res, nil
+	return &orgRes, nil, nil
 }
 
 func (c *Client) UpdateOrganisation(ctx context.Context, id int, name string) error {
@@ -72,7 +72,7 @@ func (c *Client) UpdateOrganisation(ctx context.Context, id int, name string) er
 		Name: name,
 	}
 
-	_, err := c.do(ctx, http.MethodPatch, requestPath, req, nil)
+	_, err := c.do(ctx, http.MethodPut, requestPath, req, nil)
 	if err != nil {
 		return err
 	}
@@ -81,7 +81,7 @@ func (c *Client) UpdateOrganisation(ctx context.Context, id int, name string) er
 }
 
 func (c *Client) DeleteOrganisation(ctx context.Context, id int) error {
-	requestPath := fmt.Sprintf("/organisation/%s", string(id))
+	requestPath := fmt.Sprintf("/organisation/%d", id)
 
 	_, err := c.do(ctx, http.MethodDelete, requestPath, nil, nil)
 	if err != nil {

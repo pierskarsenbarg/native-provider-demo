@@ -30,6 +30,7 @@ tasks:
       - rm -f schema.json
       - pulumi package get-schema ./bin/{{.PROVIDER}} > schema.json
   generate_dotnet_sdk:
+    deps: [build_provider]
     cmds:
       - rm -rf {{.SDK_DIR}}/dotnet
       - pulumi package gen-sdk ./bin/{{.PROVIDER}} --language dotnet -o {{.TMPDIR}}
@@ -60,16 +61,16 @@ tasks:
     deps: [generate_nodejs_sdk]
     cmds:
       - yarn link --cwd {{.SDK_DIR}}/nodejs/bin
-  generate_go_sdk:
-    cmds:
-      - rm -rf {{.SDK_DIR}}/go
-      - pulumi package gen-sdk ./bin/{{.PROVIDER}} --language go -o {{.TMPDIR}}
-      - cp go.mod {{.TMPDIR}}/go/{{.PROVIDER_NAME}}/go.mod
-      - cd {{.TMPDIR}}/go/{{.PROVIDER_NAME}} && go mod edit -module={{.PROJECT}}/{{.SDK_DIR}}/go/{{.PROVIDER_NAME}} && go mod tidy
-      - mv -f {{.TMPDIR}}/go {{.SDK_DIR}}/go
-    vars:
-      TMPDIR:
-        sh: mktemp -d
+  # generate_go_sdk:
+  #   cmds:
+  #     - rm -rf {{.SDK_DIR}}/go
+  #     - pulumi package gen-sdk ./bin/{{.PROVIDER}} --language go -o {{.TMPDIR}}
+  #     - cp go.mod {{.TMPDIR}}/go/{{.PROVIDER_NAME}}/go.mod
+  #     - cd {{.TMPDIR}}/go/{{.PROVIDER_NAME}} && go mod edit -module={{.PROJECT}}/{{.SDK_DIR}}/go/{{.PROVIDER_NAME}} && go mod tidy
+  #     - mv -f {{.TMPDIR}}/go {{.SDK_DIR}}/go
+  #   vars:
+  #     TMPDIR:
+  #       sh: mktemp -d
   generate_python_sdk:
     cmds:
       - rm -rf {{.SDK_DIR}}/python
