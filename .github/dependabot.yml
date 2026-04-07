@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /provider
+    schedule:
+      interval: weekly
+    assignees:
+      - pierskarsenbarg
+    commit-message:
+      prefix: chore
+
+  - package-ecosystem: npm
+    directory: /service
+    schedule:
+      interval: weekly
+    assignees:
+      - pierskarsenbarg
+    commit-message:
+      prefix: chore
