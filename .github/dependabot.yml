@@ -17,3 +17,12 @@ updates:
       - pierskarsenbarg
     commit-message:
       prefix: chore
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    assignees:
+      - pierskarsenbarg
+    commit-message:
+      prefix: chore
