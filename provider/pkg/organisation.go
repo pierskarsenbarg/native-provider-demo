@@ -9,6 +9,7 @@ import (
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
+	"github.com/pulumi/pulumi/sdk/v3/go/property"
 )
 
 type Organisation struct{}
@@ -31,20 +32,23 @@ func (o *OrganisationState) Annotate(a infer.Annotator) {
 	a.Describe(&o.Name, "Name of organisation created")
 }
 
-func (o *Organisation) Create(ctx context.Context, name string, input OrganisationArgs, preview bool) (id string, output OrganisationState, err error) {
-	if preview {
-		return "", OrganisationState{}, nil
+func (o *Organisation) Create(ctx context.Context, req infer.CreateRequest[OrganisationArgs]) (infer.CreateResponse[OrganisationState], error) {
+	if req.DryRun {
+		return infer.CreateResponse[OrganisationState]{}, nil
 	}
 
 	config := infer.GetConfig[Config](ctx)
-	org, err := o.createOrganisation(*input.Name, config, ctx)
+	org, err := o.createOrganisation(*req.Inputs.Name, config, ctx)
 	if err != nil {
-		return "", OrganisationState{}, fmt.Errorf("error creating organisation: %v", err)
+		return infer.CreateResponse[OrganisationState]{}, fmt.Errorf("error creating organisation: %v", err)
 	}
 
-	return strconv.Itoa(org.Result.Id), OrganisationState{
-		Id:   org.Result.Id,
-		Name: org.Result.Name,
+	return infer.CreateResponse[OrganisationState]{
+		ID: strconv.Itoa(org.Result.Id),
+		Output: OrganisationState{
+			Id:   org.Result.Id,
+			Name: org.Result.Name,
+		},
 	}, nil
 }
 
@@ -57,18 +61,18 @@ func (*Organisation) createOrganisation(name string, config Config, ctx context.
 	return organisation, nil
 }
 
-func (o *Organisation) Delete(ctx context.Context, id string, props OrganisationState) error {
+func (o *Organisation) Delete(ctx context.Context, req infer.DeleteRequest[OrganisationState]) (infer.DeleteResponse, error) {
 	config := infer.GetConfig[Config](ctx)
 
-	orgId, err := strconv.Atoi(id)
+	orgId, err := strconv.Atoi(req.ID)
 	if err != nil {
-		return fmt.Errorf("could not delete organisation. Id not a valid number: %v", err)
+		return infer.DeleteResponse{}, fmt.Errorf("could not delete organisation. Id not a valid number: %v", err)
 	}
 	err = o.deleteOrganisation(ctx, orgId, config)
 	if err != nil {
-		return fmt.Errorf("error deleting organisation: %v", err)
+		return infer.DeleteResponse{}, fmt.Errorf("error deleting organisation: %v", err)
 	}
-	return nil
+	return infer.DeleteResponse{}, nil
 }
 
 func (*Organisation) deleteOrganisation(ctx context.Context, id int, config Config) error {
@@ -79,40 +83,42 @@ func (*Organisation) deleteOrganisation(ctx context.Context, id int, config Conf
 	return nil
 }
 
-func (o *Organisation) Diff(ctx context.Context, id string, olds OrganisationState, news OrganisationArgs) (p.DiffResponse, error) {
+func (o *Organisation) Diff(ctx context.Context, req infer.DiffRequest[OrganisationArgs, OrganisationState]) (infer.DiffResponse, error) {
 	diff := map[string]p.PropertyDiff{}
 
-	if news.Name != &olds.Name {
+	if req.Inputs.Name != &req.State.Name {
 		diff["orgName"] = p.PropertyDiff{Kind: p.Update} // can also be UpdateReplace, DeleteReplace
 	}
 
-	return p.DiffResponse{
+	return infer.DiffResponse{
 		DeleteBeforeReplace: false,
 		HasChanges:          len(diff) > 0,
 		DetailedDiff:        diff,
 	}, nil
 }
 
-func (o *Organisation) Read(ctx context.Context, id string, inputs OrganisationArgs, state OrganisationState) (
-	string, OrganisationArgs, OrganisationState, error,
-) {
+func (o *Organisation) Read(ctx context.Context, req infer.ReadRequest[OrganisationArgs, OrganisationState]) (infer.ReadResponse[OrganisationArgs, OrganisationState], error) {
 	config := infer.GetConfig[Config](ctx)
 
-	organisation, err := o.getOrganisation(ctx, id, config)
+	organisation, err := o.getOrganisation(ctx, req.ID, config)
 	if err != nil {
-		return "", OrganisationArgs{}, OrganisationState{}, err
+		return infer.ReadResponse[OrganisationArgs, OrganisationState]{}, err
 	}
 
-	if organisation != nil {
-		return "", OrganisationArgs{}, OrganisationState{}, nil
+	if organisation == nil {
+		return infer.ReadResponse[OrganisationArgs, OrganisationState]{}, nil
 	}
 
-	return id, OrganisationArgs{
-			Name: &organisation.Name,
-		}, OrganisationState{
-			Id:   organisation.Id,
+	return infer.ReadResponse[OrganisationArgs, OrganisationState]{
+		ID: req.ID,
+		Inputs: OrganisationArgs{
+			Name: req.Inputs.Name,
+		},
+		State: OrganisationState{
+			Id:   req.State.Id,
 			Name: organisation.Name,
-		}, nil
+		},
+	}, nil
 }
 
 func (*Organisation) getOrganisation(ctx context.Context, id string, config Config) (*api.Organisation, error) {
@@ -127,22 +133,24 @@ func (*Organisation) getOrganisation(ctx context.Context, id string, config Conf
 	return &organisation.Result, nil
 }
 
-func (o *Organisation) Update(ctx context.Context, id string, olds OrganisationState, news OrganisationArgs, preview bool) (OrganisationState, error) {
-	orgId, err := strconv.Atoi(id)
+func (o *Organisation) Update(ctx context.Context, req infer.UpdateRequest[OrganisationArgs, OrganisationState]) (infer.UpdateResponse[OrganisationState], error) {
+	orgId, err := strconv.Atoi(req.ID)
 	if err != nil {
-		return OrganisationState{}, err
+		return infer.UpdateResponse[OrganisationState]{}, err
 	}
-	if !preview && olds.Name != *news.Name {
+	if !req.DryRun && req.State.Name != *req.Inputs.Name {
 		config := infer.GetConfig[Config](ctx)
-		err := o.updateOrganisation(ctx, orgId, *news.Name, config)
+		err := o.updateOrganisation(ctx, orgId, *req.Inputs.Name, config)
 		if err != nil {
-			return OrganisationState{}, err
+			return infer.UpdateResponse[OrganisationState]{}, err
 		}
 	}
 
-	return OrganisationState{
-		Id:   orgId,
-		Name: *news.Name,
+	return infer.UpdateResponse[OrganisationState]{
+		Output: OrganisationState{
+			Id:   orgId,
+			Name: *req.Inputs.Name,
+		},
 	}, nil
 }
 
@@ -154,22 +162,18 @@ func (*Organisation) updateOrganisation(ctx context.Context, id int, newName str
 	return nil
 }
 
-var _ infer.CustomCheck[OrganisationArgs] = ((*Organisation)(nil))
-
-func (*Organisation) Check(
-	ctx context.Context, name string, oldInputs, newInputs resource.PropertyMap,
-) (OrganisationArgs, []p.CheckFailure, error) {
+func (*Organisation) Check(ctx context.Context, req infer.CheckRequest) (infer.CheckResponse[OrganisationArgs], error) {
 	// Apply default arguments
-	args, failures, err := infer.DefaultCheck[OrganisationArgs](ctx, newInputs)
-	if err != nil {
-		return args, failures, err
-	}
+	args, failures, err := infer.DefaultCheck[OrganisationArgs](ctx, req.NewInputs)
 
 	// Apply autonaming
 	//
 	// If args.Name is unset, we set it to a value based off of the resource name.
-	args.Name, err = autoname(args.Name, name, "orgName", oldInputs)
-	return args, failures, err
+	args.Name, err = autoname(args.Name, req.Name, "orgName", req.OldInputs)
+	return infer.CheckResponse[OrganisationArgs]{
+		Inputs:   args,
+		Failures: failures,
+	}, err
 }
 
 type GetOrganisation struct{}
@@ -178,39 +182,37 @@ type GetOrganisationArgs struct {
 	Id int `pulumi:"orgId"`
 }
 
-func (GetOrganisation) Call(ctx context.Context, args GetOrganisationArgs) (OrganisationState, error) {
+func (*GetOrganisation) Invoke(ctx context.Context, req infer.FunctionRequest[GetOrganisationArgs]) (infer.FunctionResponse[OrganisationState], error) {
 	config := infer.GetConfig[Config](ctx)
 
-	orgId := strconv.Itoa(args.Id)
+	orgId := strconv.Itoa(req.Input.Id)
 
 	organisation, res, err := config.Client.GetOrganisation(ctx, orgId)
 	if err != nil {
 		if res.StatusCode == 404 {
-			return OrganisationState{}, nil
+			return infer.FunctionResponse[OrganisationState]{}, nil
 		}
-		return OrganisationState{}, err
+		return infer.FunctionResponse[OrganisationState]{}, err
 	}
-	return OrganisationState{
-		Id:   organisation.Result.Id,
-		Name: organisation.Result.Name,
+	return infer.FunctionResponse[OrganisationState]{
+		Output: OrganisationState{
+			Id:   organisation.Result.Id,
+			Name: organisation.Result.Name,
+		},
 	}, nil
 }
 
 func autoname(
-	field *string, name string, fieldName resource.PropertyKey,
-	oldInputs resource.PropertyMap,
+	field *string, name, fieldName string,
+	oldInputs property.Map,
 ) (*string, error) {
 	if field != nil {
 		return field, nil
 	}
 
-	prev := oldInputs[fieldName]
-	if prev.IsSecret() {
-		prev = prev.SecretValue().Element
-	}
-
-	if prev.IsString() && prev.StringValue() != "" {
-		n := prev.StringValue()
+	prev := oldInputs.Get(fieldName)
+	if prev.IsString() && prev.AsString() != "" {
+		n := prev.AsString()
 		field = &n
 	} else {
 		n, err := resource.NewUniqueHex(name+"-", 6, 20)
@@ -219,5 +221,6 @@ func autoname(
 		}
 		field = &n
 	}
+
 	return field, nil
 }

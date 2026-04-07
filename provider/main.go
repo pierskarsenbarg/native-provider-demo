@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -20,7 +21,7 @@ var Version = "0.0.1"
 const Name string = "nativeProvider"
 
 func main() {
-	err := p.RunProvider(Name, Version, provider())
+	err := p.RunProvider(context.Background(), Name, Version, provider())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s", err.Error())
 		os.Exit(1)
@@ -34,11 +35,12 @@ func provider() p.Provider {
 			Description: "Demo native provider",
 			LanguageMap: map[string]any{
 				"go": gogen.GoPackageInfo{
-					ModulePath:     "github.com/pierskarsenbarg/native-provider-demo/provider/sdk",
-					ImportBasePath: "github.com/pierskarsenbarg/native-provider-demo/provider/sdk/go/nativeProvider",
+					RespectSchemaVersion: true,
+					ImportBasePath:       "github.com/pierskarsenbarg/native-provider-demo/provider/sdk/go/nativeProvider",
 				},
 				"nodejs": nodejsgen.NodePackageInfo{
-					PackageName: "@pierskarsenbarg/nativeProvider",
+					RespectSchemaVersion: true,
+					PackageName:          "@pierskarsenbarg/nativeProvider",
 					Dependencies: map[string]string{
 						"@pulumi/pulumi": "^3.0.0",
 					},
@@ -48,15 +50,20 @@ func provider() p.Provider {
 					},
 				},
 				"csharp": dotnetgen.CSharpPackageInfo{
-					RootNamespace: "MyNamespace",
+					RespectSchemaVersion: true,
+					RootNamespace:        "MyNamespace",
 					PackageReferences: map[string]string{
 						"Pulumi": "3.*",
 					},
 				},
 				"python": pythongen.PackageInfo{
+					RespectSchemaVersion: true,
 					Requires: map[string]string{
 						"pulumi": ">=3.0.0,<4.0.0",
 					},
+					PyProject: struct {
+						Enabled bool `json:"enabled,omitempty"`
+					}{Enabled: true},
 					PackageName: "pierskarsenbarg_pulumi_nativeProvider",
 				},
 			},
@@ -64,14 +71,14 @@ func provider() p.Provider {
 			Publisher:         "Piers Karsenbarg",
 		},
 		Resources: []infer.InferredResource{
-			infer.Resource[*pkg.Organisation, pkg.OrganisationArgs, pkg.OrganisationState](),
+			infer.Resource[*pkg.Organisation](&pkg.Organisation{}),
 		},
 		ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
 			"pkg": "index", // required because the folder with everything in is "pkg"
 		},
 		Functions: []infer.InferredFunction{
-			infer.Function[*pkg.GetOrganisation, pkg.GetOrganisationArgs, pkg.OrganisationState](),
+			infer.Function(&pkg.GetOrganisation{}),
 		},
-		Config: infer.Config[*pkg.Config](),
+		Config: infer.Config(&pkg.Config{}),
 	})
 }
