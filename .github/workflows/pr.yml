@@ -1,5 +1,8 @@
 name: PR Checks
 
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
