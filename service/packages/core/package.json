@@ -10,7 +10,7 @@
     "drizzle-kit": "^0.26.2"
   },
   "dependencies": {
-    "drizzle-orm": "^0.35.1",
+    "drizzle-orm": "^0.45.2",
     "remeda": "^2.15.0",
     "zod": "^3.23.8"
   }
