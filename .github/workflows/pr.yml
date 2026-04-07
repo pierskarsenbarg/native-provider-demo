@@ -1,0 +1,23 @@
+name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build-provider:
+    name: Build Provider
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22.5"
+          cache-dependency-path: provider/go.sum
+
+      - uses: arduino/setup-task@v2
+
+      - name: Build provider
+        working-directory: provider
+        run: task build_provider
