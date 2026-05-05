@@ -21,7 +21,7 @@ jobs:
 
       - uses: arduino/setup-task@v2
 
-      - uses: pulumi/actions@v6
+      - uses: pulumi/actions@v7
         with:
           pulumi-version: "3.124.0"
           
